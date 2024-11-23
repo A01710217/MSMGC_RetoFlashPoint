@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class HouseBuilder : MonoBehaviour {
     public GameObject floorPrefab;
     public GameObject wallPrefab;
+    public GameObject breakwallPrefab;
     public GameObject wallDoorPrefab;
     public GameObject wallNotDoorPrefab;
     public GameObject firePrefab;
@@ -57,7 +58,12 @@ public class HouseBuilder : MonoBehaviour {
             // Colocar el objeto según la categoría
             switch (edge.category) {
                 case "wall":
-                    Instantiate(wallPrefab, midPoint, rotation);
+                    //Validar si la pared tiene vida
+                    if (edge.life == 2) {
+                        Instantiate(wallPrefab, midPoint, rotation);
+                    } if (edge.life == 1) {
+                        Instantiate(breakwallPrefab, midPoint, rotation);
+                    }
                     break;
                 case "door":
                     Instantiate(wallDoorPrefab, midPoint, rotation);

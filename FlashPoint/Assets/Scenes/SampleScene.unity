@@ -484,7 +484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3158699170200301949, guid: cd89f99207d08f44c85b4202ba0fd103, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7168509401563523096, guid: cd89f99207d08f44c85b4202ba0fd103, type: 3}
       propertyPath: m_LocalPosition.y
@@ -524,10 +524,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e45463f2f9b26547b7eb4a757b01f2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 8235489640884711517, guid: 9992b26f01e8c814c85ec3fceccebc3f, type: 3}
-  wallPrefab: {fileID: 7088829027063772975, guid: f8f3db287431d1943acc868dbf768fc2, type: 3}
-  wallDoorPrefab: {fileID: 7088100720377681057, guid: c4e56403ad0174546954c42e303b6d45, type: 3}
-  wallNotDoorPrefab: {fileID: 7102034102573219649, guid: 6250373a54e1db948ba1d58f3ddf72e0, type: 3}
+  floorPrefab: {fileID: 1407977168915843719, guid: 03be0dcfb06caf54a86c12ab672de9e0, type: 3}
+  wallPrefab: {fileID: 8636736958891849315, guid: eaf71c550292ebc4aa79a5117dbf6db4, type: 3}
+  breakwallPrefab: {fileID: 7350359433390929273, guid: c046824136f0ac94fbbc7a8c89c7533f, type: 3}
+  wallDoorPrefab: {fileID: 2616997381179906587, guid: b571824246e484046843a368c9bdbaf8, type: 3}
+  wallNotDoorPrefab: {fileID: 2095702409267218840, guid: 82479da1adbed28438268fcc317b859a, type: 3}
   firePrefab: {fileID: 251444446070205634, guid: d2075d90eaaf6f64fa3747c334f39042, type: 3}
   smokePrefab: {fileID: 8090073374582103774, guid: c2a46d6dc6c6e424291f86c0c376d275, type: 3}
   poi_baitPrefab: {fileID: 7147778409612031793, guid: f6da5dbce11792048b774d9fb6e3f66c, type: 3}
