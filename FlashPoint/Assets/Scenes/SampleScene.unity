@@ -531,8 +531,10 @@ MonoBehaviour:
   wallNotDoorPrefab: {fileID: 2095702409267218840, guid: 82479da1adbed28438268fcc317b859a, type: 3}
   firePrefab: {fileID: 251444446070205634, guid: d2075d90eaaf6f64fa3747c334f39042, type: 3}
   smokePrefab: {fileID: 8090073374582103774, guid: c2a46d6dc6c6e424291f86c0c376d275, type: 3}
-  poi_baitPrefab: {fileID: 7147778409612031793, guid: f6da5dbce11792048b774d9fb6e3f66c, type: 3}
-  poiPrefab: {fileID: 476315640658808991, guid: e220111faba17e04fa85352fdaacdac7, type: 3}
+  poi_baitPrefab: {fileID: 8677510298642309604, guid: f6da5dbce11792048b774d9fb6e3f66c, type: 3}
+  poiBPrefab: {fileID: 138482892156655214, guid: bf5f8814cb397724eb8d1034af4b3973, type: 3}
+  poiGPrefab: {fileID: 3572163646115679572, guid: ea7628da4c8d4e0488c9af54e60f9a82, type: 3}
+  poiRPrefab: {fileID: 2836793311086658315, guid: 5b9db34ee8790ed42b28a127875ae639, type: 3}
 --- !u!4 &1148112840
 Transform:
   m_ObjectHideFlags: 0

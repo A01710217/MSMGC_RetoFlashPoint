@@ -10,7 +10,10 @@ public class HouseBuilder : MonoBehaviour {
     public GameObject firePrefab;
     public GameObject smokePrefab;
     public GameObject poi_baitPrefab;
-    public GameObject poiPrefab;
+    public GameObject poiBPrefab;
+    public GameObject poiGPrefab;
+    public GameObject poiRPrefab;
+
 
     public void BuildHouse(MazeGraph graph) {
         // Colocar nodos (pisos, fuego, puntos de interés)
@@ -34,7 +37,16 @@ public class HouseBuilder : MonoBehaviour {
                 case "poi":
                     // Checar el status del poi
                     if (node.status == "v") {
-                        Instantiate(poiPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        //Crear un punto de interés random
+                        int random = Random.Range(0, 3);
+
+                        if (random == 0) {
+                            Instantiate(poiBPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        } else if (random == 1) {
+                            Instantiate(poiGPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        } else {
+                            Instantiate(poiRPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        }
                     } else {
                         Instantiate(poi_baitPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     }
