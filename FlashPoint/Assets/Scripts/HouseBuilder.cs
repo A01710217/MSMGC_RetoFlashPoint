@@ -48,13 +48,13 @@ public class HouseBuilder : MonoBehaviour {
             // Colocar el objeto según la categoría
             switch (edge.category) {
                 case "wall":
-                    Instantiate(wallPrefab, midPoint + Vector3.up * 0.5f, rotation);
+                    Instantiate(wallPrefab, midPoint, rotation);
                     break;
                 case "door":
-                    Instantiate(wallDoorPrefab, midPoint + Vector3.up * 0.5f, rotation);
+                    Instantiate(wallDoorPrefab, midPoint, rotation);
                     break;
                 case "exit":
-                    Instantiate(wallNotDoorPrefab, midPoint + Vector3.up * 0.5f, rotation);
+                    Instantiate(wallNotDoorPrefab, midPoint, rotation);
                     break;
                 default:
                     // "empty" o conexiones sin categoría no hacen nada
