@@ -8,6 +8,7 @@ public class HouseBuilder : MonoBehaviour {
     public GameObject wallNotDoorPrefab;
     public GameObject firePrefab;
     public GameObject smokePrefab;
+    public GameObject poi_baitPrefab;
     public GameObject poiPrefab;
 
     public void BuildHouse(MazeGraph graph) {
@@ -23,15 +24,21 @@ public class HouseBuilder : MonoBehaviour {
             switch (node.type) {
                 case "fire":
                     // Colocar el fuego
-                    Instantiate(firePrefab ?? CreateDefaultFire(), position + Vector3.up * 0.1f, Quaternion.identity);
+                    Instantiate(firePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     break;
                 case "smoke":
                     // Colocar el humo
                     Instantiate(smokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     break;
                 case "poi":
-                    // Colocar el punto de interés
-                    Instantiate(poiPrefab ?? CreateDefaultPoi(), position + Vector3.up * 0.1f, Quaternion.identity);
+                    //Checar el status del poi
+                    if (node.status == "v") {
+                        // Colocar el punto de interés
+                        Instantiate(poiPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                    } else {
+                        // Colocar el punto de interés con cebo
+                        Instantiate(poi_baitPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                    }
                     break;
                 default:
                     // Otros tipos no necesitan acción aquí
