@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: -0.5}
-  m_LocalPosition: {x: 3.5, y: 11, z: 5}
+  m_LocalPosition: {x: 3.5, y: 7.5, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -520,10 +520,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e45463f2f9b26547b7eb4a757b01f2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 1777022325545151304, guid: 253b99067dafb4141be829a95d7f3b69, type: 3}
-  wallPrefab: {fileID: 4768903697635857448, guid: 8fa478d828c78b14bb441bccba792cd1, type: 3}
-  wallDoorPrefab: {fileID: 7916255778756741527, guid: b0a5618b2d9cecb498779440c4b30770, type: 3}
-  wallNotDoorPrefab: {fileID: 746393067674437024, guid: 6c1119ee73c21f94d8da8654320c6a8c, type: 3}
+  floorPrefab: {fileID: 8235489640884711517, guid: 9992b26f01e8c814c85ec3fceccebc3f, type: 3}
+  wallPrefab: {fileID: 7088829027063772975, guid: f8f3db287431d1943acc868dbf768fc2, type: 3}
+  wallDoorPrefab: {fileID: 7088100720377681057, guid: c4e56403ad0174546954c42e303b6d45, type: 3}
+  wallNotDoorPrefab: {fileID: 7102034102573219649, guid: 6250373a54e1db948ba1d58f3ddf72e0, type: 3}
   firePrefab: {fileID: 251444446070205634, guid: d2075d90eaaf6f64fa3747c334f39042, type: 3}
   smokePrefab: {fileID: 8090073374582103774, guid: c2a46d6dc6c6e424291f86c0c376d275, type: 3}
   poi_baitPrefab: {fileID: 7147778409612031793, guid: f6da5dbce11792048b774d9fb6e3f66c, type: 3}
