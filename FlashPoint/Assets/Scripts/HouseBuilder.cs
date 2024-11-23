@@ -16,9 +16,9 @@ public class HouseBuilder : MonoBehaviour {
         foreach (var node in graph.nodes) {
             // Posición de la celda
             Vector3 position = new Vector3(node.id[1], 0, node.id[0]);
-
-            // Colocar el piso en cada celda y rotarlo 270 grados en el eje X
-            Instantiate(floorPrefab, position, Quaternion.Euler(270, 0, 0));
+            
+            // Ajustar el piso más cerca del suelo
+            Instantiate(floorPrefab, position + Vector3.down * 0.25f, Quaternion.Euler(270, 0, 0));
 
             // Determinar el tipo de nodo
             switch (node.type) {
@@ -31,17 +31,14 @@ public class HouseBuilder : MonoBehaviour {
                     Instantiate(smokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     break;
                 case "poi":
-                    //Checar el status del poi
+                    // Checar el status del poi
                     if (node.status == "v") {
-                        // Colocar el punto de interés
                         Instantiate(poiPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     } else {
-                        // Colocar el punto de interés con cebo
                         Instantiate(poi_baitPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     }
                     break;
                 default:
-                    // Otros tipos no necesitan acción aquí
                     break;
             }
         }
@@ -69,7 +66,6 @@ public class HouseBuilder : MonoBehaviour {
                     Instantiate(wallNotDoorPrefab, midPoint, rotation);
                     break;
                 default:
-                    // "empty" o conexiones sin categoría no hacen nada
                     break;
             }
         }
@@ -77,21 +73,15 @@ public class HouseBuilder : MonoBehaviour {
 
     // Obtener la rotación de la pared o puerta según su orientación
     private Quaternion GetEdgeRotation(Vector3 source, Vector3 target) {
-        // Si la diferencia es en Z, es una conexión vertical
         if (Mathf.Abs(source.z - target.z) > 0.1f) {
-            return Quaternion.Euler(270, 0, 0); // Sin rotación adicional
+            return Quaternion.Euler(270, 0, 0);
         }
-
-        // Si la diferencia es en X, es una conexión horizontal
         if (Mathf.Abs(source.x - target.x) > 0.1f) {
-            return Quaternion.Euler(270, 90, 0); // Rotación 90° en el eje Y
+            return Quaternion.Euler(270, 90, 0);
         }
-
-        // Por defecto, sin rotación
         return Quaternion.identity;
     }
 
-    // Métodos para crear objetos predeterminados si faltan prefabs
     private GameObject CreateDefaultFire() {
         GameObject fire = GameObject.CreatePrimitive(PrimitiveType.Cube);
         fire.GetComponent<Renderer>().material.color = Color.red;
