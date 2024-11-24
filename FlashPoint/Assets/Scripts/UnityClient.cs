@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+// Clases para manejar la deserialización del JSON
 
 [System.Serializable]
 public class Node {
     public int[] id;
     public string type;
-    public string status; // Cambié a string para que acepte valores vacíos
+    public string status;  // Aseguramos que sea string para manejar valores vacíos
 }
 
 [System.Serializable]
@@ -32,27 +33,42 @@ public class AgentState {
 }
 
 [System.Serializable]
+public class MazeGraph {
+    public List<Node> nodes;
+    public List<Edge> edges;
+}
+
+[System.Serializable]
 public class InitialConfig {
     public List<AgentState> initialAgents;
     public MazeGraph initialModel;
 }
 
 [System.Serializable]
-public class MazeGraph {
-    public List<Node> nodes;
-    public List<Edge> edges;
+public class AnimationStep {
+    public int step;
+    public List<AgentState> animationAgent;
+    public MazeGraph animationModel;
+}
+
+[System.Serializable]
+public class CombinedConfigAnimation {
+    public InitialConfig initialConfig;
+    public List<AnimationStep> animationData;
 }
 
 public class UnityClient : MonoBehaviour {
     public HouseBuilder houseBuilder;  // Referencia al script HouseBuilder
     public AgentManager agentManager;  // Referencia al script AgentManager
+    private int currentStep = 0;
+    private List<AnimationStep> animationSteps;
 
     void Start() {
-        StartCoroutine(DownloadInitialConfig());
+        StartCoroutine(DownloadCombinedConfig());
     }
 
-    IEnumerator DownloadInitialConfig() {
-        // Realizar solicitud POST al servidor para obtener la configuración inicial
+    IEnumerator DownloadCombinedConfig() {
+        // Realizar solicitud POST al servidor para obtener el JSON combinado
         UnityWebRequest request = UnityWebRequest.PostWwwForm("http://localhost:8585", "");
         yield return request.SendWebRequest();
 
@@ -60,24 +76,52 @@ public class UnityClient : MonoBehaviour {
             Debug.Log("Response: " + request.downloadHandler.text);
 
             try {
-                // Parsear el JSON recibido
-                InitialConfig initialConfig = JsonUtility.FromJson<InitialConfig>(request.downloadHandler.text);
+                // Parsear el JSON combinado
+                CombinedConfigAnimation combinedData = JsonUtility.FromJson<CombinedConfigAnimation>(request.downloadHandler.text);
 
                 // Debugear: Verificar si la deserialización fue exitosa
-                Debug.Log("Initial Agents: " + initialConfig.initialAgents.Count);
-                Debug.Log("Initial Model Nodes: " + initialConfig.initialModel.nodes.Count);
-                Debug.Log("Initial Model Edges: " + initialConfig.initialModel.edges.Count);
+                Debug.Log("Initial Agents: " + combinedData.initialConfig.initialAgents.Count);
+                Debug.Log("Initial Model Nodes: " + combinedData.initialConfig.initialModel.nodes.Count);
+                Debug.Log("Initial Model Edges: " + combinedData.initialConfig.initialModel.edges.Count);
 
                 // Construir la casa con el grafo recibido
-                houseBuilder.BuildHouse(initialConfig.initialModel);
+                houseBuilder.BuildHouse(combinedData.initialConfig.initialModel);
 
                 // Crear los agentes
-                agentManager.CreateAgents(initialConfig.initialAgents);
+                agentManager.CreateAgents(combinedData.initialConfig.initialAgents);
+
+                // Guardar los pasos de animación
+                animationSteps = combinedData.animationData;
+                StartCoroutine(PlayAnimationSteps());
+
             } catch (Exception e) {
                 Debug.LogError("Error al deserializar el JSON: " + e.Message);
             }
         } else {
             Debug.Log("Error: " + request.error);
+        }
+    }
+
+    // Corutina para ejecutar los pasos de animación cada 2 segundos
+    IEnumerator PlayAnimationSteps() {
+        while (currentStep < animationSteps.Count) {
+            Debug.Log($"Playing Animation Step {animationSteps[currentStep].step}");
+
+            // Actualizar la casa y los agentes en el paso actual
+            houseBuilder.BuildHouse(animationSteps[currentStep].animationModel);
+            agentManager.UpdateAgentStates(animationSteps[currentStep].animationAgent);
+
+            // Esperar 2 segundos antes de la siguiente actualización
+            yield return new WaitForSeconds(2);
+
+            // Incrementar el paso actual
+            currentStep++;
+
+            // Evitar que el índice sobrepase el rango
+            if (currentStep >= animationSteps.Count) {
+                Debug.Log("Animation completed.");
+                break;
+            }
         }
     }
 }

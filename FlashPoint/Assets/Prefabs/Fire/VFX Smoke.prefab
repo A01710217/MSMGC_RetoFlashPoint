@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX Smoke
       objectReference: {fileID: 0}
+    - target: {fileID: 7213174095932876403, guid: 92c5dab51d5dad74b82a0ad498bdfb36, type: 3}
+      propertyPath: m_TagString
+      value: Smoke
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4758233800214492657, guid: 92c5dab51d5dad74b82a0ad498bdfb36, type: 3}
