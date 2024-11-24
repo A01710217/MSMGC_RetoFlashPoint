@@ -581,6 +581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   houseBuilder: {fileID: 1148112839}
+  agentPrefab: {fileID: 6060285580249839395, guid: 515601a94620b5d45b56997268d86e10, type: 3}
 --- !u!4 &1476406715
 Transform:
   m_ObjectHideFlags: 0
