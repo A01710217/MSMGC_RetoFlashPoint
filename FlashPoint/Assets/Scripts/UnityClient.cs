@@ -21,21 +21,37 @@ public class Edge {
 }
 
 [System.Serializable]
+public class AgentState {
+    public int agent_id;
+    public int[] current_node;
+    public int[] neighbor;
+    public string action;
+    public int[] direction;
+    public bool carrying;
+}
+
+[System.Serializable]
+public class InitialConfig {
+    public List<AgentState> initialAgents;
+    public MazeGraph initialModel;
+}
+
+[System.Serializable]
 public class MazeGraph {
     public List<Node> nodes;
     public List<Edge> edges;
-    public List<List<string>> maze;
 }
 
 public class UnityClient : MonoBehaviour {
     public HouseBuilder houseBuilder;  // Referencia al script HouseBuilder
+    public GameObject agentPrefab;    // Prefab para los agentes
 
     void Start() {
-        StartCoroutine(DownloadGraph());
+        StartCoroutine(DownloadInitialConfig());
     }
 
-    IEnumerator DownloadGraph() {
-        // Realizar solicitud POST al servidor
+    IEnumerator DownloadInitialConfig() {
+        // Realizar solicitud POST al servidor para obtener la configuración inicial
         UnityWebRequest request = UnityWebRequest.PostWwwForm("http://localhost:8585", "");
         yield return request.SendWebRequest();
 
@@ -43,12 +59,12 @@ public class UnityClient : MonoBehaviour {
             Debug.Log("Response: " + request.downloadHandler.text);
 
             // Parsear el JSON recibido
-            MazeGraph graph = JsonUtility.FromJson<MazeGraph>(request.downloadHandler.text);
-            Debug.Log("Nodos recibidos: " + graph.nodes.Count);
-            Debug.Log("Aristas recibidas: " + graph.edges.Count);
+            InitialConfig initialConfig = JsonUtility.FromJson<InitialConfig>(request.downloadHandler.text);
+            Debug.Log("Nodos recibidos: " + initialConfig.initialModel.nodes.Count);
+            Debug.Log("Aristas recibidas: " + initialConfig.initialModel.edges.Count);
 
-            // Llamar a BuildHouse para construir la casa con el grafo recibido
-            houseBuilder.BuildHouse(graph);  // Llamar al método BuildHouse del HouseBuilder
+            // Construir la casa con el grafo recibido
+            houseBuilder.BuildHouse(initialConfig.initialModel, initialConfig.initialAgents, agentPrefab);
         } else {
             Debug.Log("Error: " + request.error);
         }
