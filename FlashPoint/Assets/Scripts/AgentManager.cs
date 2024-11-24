@@ -42,12 +42,18 @@ public class AgentManager : MonoBehaviour {
 
     // Método para rotar el agente hacia la celda a realizar la acción
     private void RotateAgentTowardsNeighbor(GameObject agent, AgentState state) {
+        // Comprobar que 'neighbor' tiene al menos dos valores
+        if (state.neighbor.Length < 2) {
+            Debug.LogWarning($"Invalid neighbor data for agent {agent.name}. Neighbor data: {string.Join(", ", state.neighbor)}");
+            return;
+        }
+
         // Vector que representa la dirección de la celda a realizar la acción
         Vector3 direction = new Vector3(state.neighbor[1], 0f, state.neighbor[0]) - agent.transform.position;
 
-        // Calcular la rotación necesaria para mirar hacia la celda a realizar la acción
+        // Comprobar si la dirección es válida (no es el mismo punto)
         if (direction != Vector3.zero) {
-            // Crear una rotación solo sobre el eje Y
+            // Calcular la rotación necesaria para mirar hacia la celda a realizar la acción
             Quaternion rotation = Quaternion.LookRotation(direction);
             rotation.x = 0f; // No rotar en el eje X
             rotation.z = 0f; // No rotar en el eje Z
@@ -57,6 +63,9 @@ public class AgentManager : MonoBehaviour {
 
             // Depurar la rotación (mostrar en la consola)
             Debug.Log($"Agent {agent.name} rotation: {agent.transform.rotation.eulerAngles}");
+        } else {
+            Debug.LogWarning($"Agent {agent.name} is already facing the target.");
         }
     }
+
 }
