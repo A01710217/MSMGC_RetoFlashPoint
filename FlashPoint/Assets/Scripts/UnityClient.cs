@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+
 
 [System.Serializable]
 public class Node {
     public int[] id;
     public string type;
-    public int value;
-    public string status;
+    public string status; // Cambié a string para que acepte valores vacíos
 }
 
 [System.Serializable]
@@ -58,16 +59,23 @@ public class UnityClient : MonoBehaviour {
         if (request.result == UnityWebRequest.Result.Success) {
             Debug.Log("Response: " + request.downloadHandler.text);
 
-            // Parsear el JSON recibido
-            InitialConfig initialConfig = JsonUtility.FromJson<InitialConfig>(request.downloadHandler.text);
-            Debug.Log("Nodos recibidos: " + initialConfig.initialModel.nodes.Count);
-            Debug.Log("Aristas recibidas: " + initialConfig.initialModel.edges.Count);
+            try {
+                // Parsear el JSON recibido
+                InitialConfig initialConfig = JsonUtility.FromJson<InitialConfig>(request.downloadHandler.text);
 
-            // Construir la casa con el grafo recibido
-            houseBuilder.BuildHouse(initialConfig.initialModel);
+                // Debugear: Verificar si la deserialización fue exitosa
+                Debug.Log("Initial Agents: " + initialConfig.initialAgents.Count);
+                Debug.Log("Initial Model Nodes: " + initialConfig.initialModel.nodes.Count);
+                Debug.Log("Initial Model Edges: " + initialConfig.initialModel.edges.Count);
 
-            // Crear los agentes
-            agentManager.CreateAgents(initialConfig.initialAgents);
+                // Construir la casa con el grafo recibido
+                houseBuilder.BuildHouse(initialConfig.initialModel);
+
+                // Crear los agentes
+                agentManager.CreateAgents(initialConfig.initialAgents);
+            } catch (Exception e) {
+                Debug.LogError("Error al deserializar el JSON: " + e.Message);
+            }
         } else {
             Debug.Log("Error: " + request.error);
         }
