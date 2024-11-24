@@ -44,7 +44,7 @@ public class MazeGraph {
 
 public class UnityClient : MonoBehaviour {
     public HouseBuilder houseBuilder;  // Referencia al script HouseBuilder
-    public GameObject agentPrefab;    // Prefab para los agentes
+    public AgentManager agentManager;  // Referencia al script AgentManager
 
     void Start() {
         StartCoroutine(DownloadInitialConfig());
@@ -64,7 +64,10 @@ public class UnityClient : MonoBehaviour {
             Debug.Log("Aristas recibidas: " + initialConfig.initialModel.edges.Count);
 
             // Construir la casa con el grafo recibido
-            houseBuilder.BuildHouse(initialConfig.initialModel, initialConfig.initialAgents, agentPrefab);
+            houseBuilder.BuildHouse(initialConfig.initialModel);
+
+            // Crear los agentes
+            agentManager.CreateAgents(initialConfig.initialAgents);
         } else {
             Debug.Log("Error: " + request.error);
         }

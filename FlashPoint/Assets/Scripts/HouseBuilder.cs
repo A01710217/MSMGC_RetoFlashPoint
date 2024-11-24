@@ -11,8 +11,8 @@ public class HouseBuilder : MonoBehaviour {
     public GameObject poi_baitPrefab;
     public GameObject poiPrefab;
 
-    public void BuildHouse(MazeGraph graph, List<AgentState> agents, GameObject agentPrefab) {
-        // Colocar nodos (pisos, fuego, puntos de interés)
+    // Método para construir la casa con los datos del grafo
+    public void BuildHouse(MazeGraph graph) {
         foreach (var node in graph.nodes) {
             Vector3 position = new Vector3(node.id[1], 0, node.id[0]);
             Instantiate(floorPrefab, position, Quaternion.Euler(0, 0, 0));
@@ -36,7 +36,7 @@ public class HouseBuilder : MonoBehaviour {
             }
         }
 
-        // Colocar aristas (muros, puertas, salidas)
+        // Colocar las aristas (muros, puertas, salidas)
         foreach (var edge in graph.edges) {
             Vector3 sourcePos = new Vector3(edge.source[1], 0, edge.source[0]);
             Vector3 targetPos = new Vector3(edge.target[1], 0, edge.target[0]);
@@ -57,14 +57,9 @@ public class HouseBuilder : MonoBehaviour {
                     break;
             }
         }
-
-        // Colocar agentes
-        foreach (var agent in agents) {
-            Vector3 agentPosition = new Vector3(agent.current_node[1], 0f, agent.current_node[0]);
-            Instantiate(agentPrefab, agentPosition, Quaternion.identity);
-        }
     }
 
+    // Función para determinar la rotación de los objetos (muros, puertas, etc.)
     private Quaternion GetEdgeRotation(Vector3 source, Vector3 target) {
         if (Mathf.Abs(source.z - target.z) > 0.1f) {
             return Quaternion.Euler(0, 0, 0);
