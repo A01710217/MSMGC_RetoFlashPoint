@@ -17,8 +17,8 @@ public class HouseBuilder : MonoBehaviour {
             // Posición de la celda
             Vector3 position = new Vector3(node.id[1], 0, node.id[0]);
 
-            // Colocar el piso en cada celda y rotarlo 270 grados en el eje X
-            Instantiate(floorPrefab, position, Quaternion.Euler(270, 0, 0));
+            // Colocar el piso en cada celda
+            Instantiate(floorPrefab, position, Quaternion.Euler(0, 0, 0));
 
             // Determinar el tipo de nodo
             switch (node.type) {
@@ -79,12 +79,12 @@ public class HouseBuilder : MonoBehaviour {
     private Quaternion GetEdgeRotation(Vector3 source, Vector3 target) {
         // Si la diferencia es en Z, es una conexión vertical
         if (Mathf.Abs(source.z - target.z) > 0.1f) {
-            return Quaternion.Euler(270, 0, 0); // Sin rotación adicional
+            return Quaternion.Euler(0, 0, 0); // Sin rotación adicional
         }
 
         // Si la diferencia es en X, es una conexión horizontal
         if (Mathf.Abs(source.x - target.x) > 0.1f) {
-            return Quaternion.Euler(270, 90, 0); // Rotación 90° en el eje Y
+            return Quaternion.Euler(0, 90, 0); // Rotación 90° en el eje Y
         }
 
         // Por defecto, sin rotación
