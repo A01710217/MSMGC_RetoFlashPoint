@@ -2,25 +2,37 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class AgentManager : MonoBehaviour {
-    public GameObject agentPrefab;  // Prefab para los agentes
+    // Prefabs para los agentes
+    public GameObject[] agentPrefabs;
+
     private List<GameObject> agents = new List<GameObject>();
 
     // Método para instanciar agentes en la escena
     public void CreateAgents(List<AgentState> initialAgents) {
-        foreach (var agent in initialAgents) {
-            Vector3 agentPosition = new Vector3(agent.current_node[1], 0f, agent.current_node[0]);
+        // Verificar que haya prefabs disponibles
+        if (agentPrefabs == null || agentPrefabs.Length == 0) {
+            Debug.LogError("No hay prefabs de agentes asignados.");
+            return;
+        }
+
+        // Crear un agente por cada estado inicial
+        foreach (var agentState in initialAgents) {
+            // Seleccionar un prefab aleatorio
+            GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
+
+            Vector3 agentPosition = new Vector3(agentState.current_node[1], 0f, agentState.current_node[0]);
 
             // Calcular la dirección hacia la celda vecina
-            Vector3 direction = new Vector3(agent.neighbor[1], 0f, agent.neighbor[0]) - agentPosition;
+            Vector3 direction = new Vector3(agentState.neighbor[1], 0f, agentState.neighbor[0]) - agentPosition;
 
             // Calcular la rotación necesaria para mirar hacia la celda vecina
             Quaternion rotation = Quaternion.LookRotation(direction);
             rotation.x = 0f; // No rotar en el eje X
             rotation.z = 0f; // No rotar en el eje Z
 
-            // Instanciar el agente con la rotación correcta
-            GameObject newAgent = Instantiate(agentPrefab, agentPosition, rotation);
-            newAgent.name = $"Agent_{agent.agent_id}";
+            // Instanciar el agente con el prefab seleccionado
+            GameObject newAgent = Instantiate(randomPrefab, agentPosition, rotation);
+            newAgent.name = $"Agent_{agentState.agent_id}";
             agents.Add(newAgent);
         }
     }
@@ -32,7 +44,7 @@ public class AgentManager : MonoBehaviour {
             if (agent != null) {
                 // Actualizar la posición del agente
                 Vector3 newPosition = new Vector3(state.current_node[1], 0f, state.current_node[0]);
-                agent.transform.position = newPosition;  
+                agent.transform.position = newPosition;
 
                 // Rotar el agente hacia la celda vecina
                 RotateAgentTowardsNeighbor(agent, state);
@@ -67,5 +79,4 @@ public class AgentManager : MonoBehaviour {
             Debug.LogWarning($"Agent {agent.name} is already facing the target.");
         }
     }
-
 }

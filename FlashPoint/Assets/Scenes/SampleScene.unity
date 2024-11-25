@@ -455,7 +455,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d407dd418cad1c42983d2ee29af16d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentPrefab: {fileID: 6060285580249839395, guid: 515601a94620b5d45b56997268d86e10, type: 3}
+  agentPrefabs:
+  - {fileID: 6060285580249839395, guid: 515601a94620b5d45b56997268d86e10, type: 3}
+  - {fileID: 4224328910853116463, guid: c745f054ecb72bd4aa7dcea74feadc32, type: 3}
+  - {fileID: 5124940967181916177, guid: 8622ea210cee1f346abf64090133fcfe, type: 3}
+  - {fileID: 502824098187433007, guid: c76b459a4dcd03146a417e2d60beb1bb, type: 3}
+  - {fileID: 5134772225295813871, guid: c0651ca4eaa72964e96a7cfcbe4a077d, type: 3}
+  - {fileID: 4929903271740050672, guid: 8773b1a04bf9c15449480c50f57d5661, type: 3}
 --- !u!4 &1017824459
 Transform:
   m_ObjectHideFlags: 0
