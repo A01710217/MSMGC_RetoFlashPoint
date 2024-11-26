@@ -62,7 +62,13 @@ public class HouseBuilder : MonoBehaviour {
                     edgeObject = Instantiate(wallPrefab, midPoint, rotation);
                     break;
                 case "door":
-                    edgeObject = Instantiate(wallDoorPrefab, midPoint, rotation);
+                    // Validar si el estatus de la puerta es abierta o cerrada
+                    if (edge.status == "closed") {
+                        edgeObject = Instantiate(wallDoorPrefab, midPoint, rotation);
+                    }
+                    else if (edge.status == "open") {
+                        edgeObject = Instantiate(wallNotDoorPrefab, midPoint, rotation);
+                    }
                     break;
                 case "exit":
                     edgeObject = Instantiate(wallNotDoorPrefab, midPoint, rotation);
@@ -88,47 +94,6 @@ public class HouseBuilder : MonoBehaviour {
             Destroy(edge);  // Eliminar las aristas del mapa
         }
         edgesOnMap.Clear();
-    }
-
-    // Función para actualizar el estado de nodos y aristas en el mapa
-    public void UpdateMapWithChanges(MazeGraph updatedGraph) {
-        // Actualizar nodos
-        foreach (var node in updatedGraph.nodes) {
-            Vector3 position = new Vector3(node.id[1], 0, node.id[0]);
-
-            // Si el nodo es un fuego apagado, eliminarlo
-            if (node.type == "fire" && node.status == "inactive") {
-                RemoveObjectAtPosition(position);
-            }
-
-            // Si el nodo es un POI recogido, eliminarlo
-            if (node.type == "poi" && node.status == "f") {
-                RemoveObjectAtPosition(position);
-            }
-        }
-
-        // Actualizar las aristas (muros, puertas, salidas)
-        foreach (var edge in updatedGraph.edges) {
-            Vector3 sourcePos = new Vector3(edge.source[1], 0, edge.source[0]);
-            Vector3 targetPos = new Vector3(edge.target[1], 0, edge.target[0]);
-            Vector3 midPoint = (sourcePos + targetPos) / 2;
-
-            // Si la arista es un muro o puerta que debe convertirse en vacío
-            if (edge.category == "empty" && edgesOnMap.ContainsKey(midPoint)) {
-                Destroy(edgesOnMap[midPoint]);  // Eliminar la arista
-                edgesOnMap.Remove(midPoint);
-                Debug.Log($"Edge at {midPoint} removed.");
-            }
-        }
-    }
-
-    // Método para eliminar un objeto en una posición específica
-    private void RemoveObjectAtPosition(Vector3 position) {
-        if (objectsOnMap.ContainsKey(position)) {
-            Destroy(objectsOnMap[position]);
-            objectsOnMap.Remove(position);
-            Debug.Log($"Object at {position} removed.");
-        }
     }
 
     // Función para determinar la rotación de los objetos (muros, puertas, etc.)

@@ -582,7 +582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorPrefab: {fileID: 4644304793634141840, guid: 4ddea77b953247742aff6d3625f48748, type: 3}
   wallPrefab: {fileID: 4581835562407229377, guid: 29d00c25e21a29b47936a1d2996cce27, type: 3}
-  wallDoorPrefab: {fileID: 1189832707997372120, guid: 5f408031df9c7904cb6e721294bc6c28, type: 3}
+  wallDoorPrefab: {fileID: 7983776029308987012, guid: 3944095c99618754786edb7bd2bf0c3a, type: 3}
   wallNotDoorPrefab: {fileID: 983969475153830125, guid: 7262967b288fb0d4ebac304060dd415f, type: 3}
   firePrefab: {fileID: 251444446070205634, guid: d2075d90eaaf6f64fa3747c334f39042, type: 3}
   smokePrefab: {fileID: 8090073374582103774, guid: c2a46d6dc6c6e424291f86c0c376d275, type: 3}
