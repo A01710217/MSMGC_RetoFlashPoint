@@ -103,30 +103,28 @@ public class UnityClient : MonoBehaviour {
         }
     }
 
-    // Corutina para ejecutar los pasos de animación cada 2 segundos
+     // Corutina para ejecutar los pasos de animación
     IEnumerator PlayAnimationSteps() {
         while (currentStep < animationSteps.Count) {
             Debug.Log($"Playing Animation Step {animationSteps[currentStep].step}");
 
-            // Actualizar los agentes en el paso actual
-            agentManager.UpdateAgentStates(animationSteps[currentStep].animationAgent);
+            // Esperar a que los agentes terminen de moverse
+            yield return StartCoroutine(agentManager.UpdateAgentStatesAndWait(animationSteps[currentStep].animationAgent, 2f));
 
-            // Esperar 3 segundos antes de la siguiente actualización
-            yield return new WaitForSeconds(3);
+            // Tiempo de espera entre pasos de animación
+            yield return new WaitForSeconds(0.5f);
 
-            // Actualizar la casa en el paso actual
+            // Actualizar la casa después de que los agentes hayan terminado
             houseBuilder.BuildHouse(animationSteps[currentStep].animationModel);
-
-            yield return new WaitForSeconds(1);
 
             // Incrementar el paso actual
             currentStep++;
 
-            // Evitar que el índice sobrepase el rango
             if (currentStep >= animationSteps.Count) {
                 Debug.Log("Animation completed.");
                 break;
             }
         }
     }
+
 }

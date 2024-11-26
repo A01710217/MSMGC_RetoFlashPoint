@@ -41,14 +41,17 @@ public class AgentManager : MonoBehaviour {
                 // Calcular la nueva posición del agente
                 Vector3 newPosition = new Vector3(state.current_node[1], 0f, state.current_node[0]);
 
-                // Calcular la dirección hacia la celda vecina
-                Vector3 direction = new Vector3(state.neighbor[1], 0f, state.neighbor[0]) - newPosition;
+                // Definir la dirección con un valor por defecto
+                Vector3 direction = Vector3.zero;
 
-                // Mover al agente y luego rotarlo hacia la celda vecina
+                // Verificar si el vecino existe
+                if (state.neighbor != null && state.neighbor.Length >= 2) {
+                    // Calcular la dirección hacia la celda vecina
+                    direction = new Vector3(state.neighbor[1], 0f, state.neighbor[0]) - newPosition;
+                }
+
+                // Mover al agente y luego rotarlo hacia la celda vecina (si aplica)
                 StartCoroutine(MoveAndRotateAgent(agent, newPosition, direction, 2f, state));
-
-                // Validar que el agente ya esté sobre la celda objetivo antes de actualizar el indicador
-                //UpdateCarryingIndicator(agent, state.agent_id, state.carrying);
             }
         }
     }
@@ -73,21 +76,20 @@ public class AgentManager : MonoBehaviour {
         // Asegurarse de que el agente termine exactamente en la posición objetivo
         agent.transform.position = targetPosition;
 
-        // Realizar la rotación hacia la dirección vecina
+        // Rotar el agente hacia la dirección vecina (si existe dirección)
         if (direction != Vector3.zero) {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
 
             elapsedTime = 0f;
-            while (elapsedTime < duration / 2) { // La rotación será más rápida (mitad del tiempo)
+            while (elapsedTime < duration / 2) {
                 elapsedTime += Time.deltaTime;
                 float t = elapsedTime / (duration / 2);
 
                 agent.transform.rotation = Quaternion.Lerp(startRotation, targetRotation, t);
 
-                yield return null; // Esperar al siguiente frame
+                yield return null;
             }
 
-            // Asegurarse de que el agente termine con la rotación objetivo
             agent.transform.rotation = targetRotation;
         }
 
@@ -95,10 +97,42 @@ public class AgentManager : MonoBehaviour {
         if (Vector3.Distance(agent.transform.position, targetPosition) < 0.1f) {
             Debug.Log($"Agent {state.agent_id} reached position {targetPosition}");
 
-            // Actualizar el indicador de carga si el estado `carrying` cambió
+            // Actualizar el indicador de carga
             UpdateCarryingIndicator(agent, state.agent_id, state.carrying);
         }
     }
+
+
+    // Corutina para manejar las animaciones de los agentes y esperar a que terminen
+    public IEnumerator UpdateAgentStatesAndWait(List<AgentState> agentStates, float duration) {
+        List<Coroutine> activeCoroutines = new List<Coroutine>();
+
+        foreach (var state in agentStates) {
+            GameObject agent = agents.Find(a => a.name == $"Agent_{state.agent_id}");
+            if (agent != null) {
+                // Calcular la nueva posición del agente
+                Vector3 newPosition = new Vector3(state.current_node[1], 0f, state.current_node[0]);
+
+                // Definir la dirección con un valor por defecto
+                Vector3 direction = Vector3.zero;
+
+                // Verificar si el vecino existe y tiene al menos dos elementos
+                if (state.neighbor != null && state.neighbor.Length >= 2) {
+                    // Calcular la dirección hacia la celda vecina
+                    direction = new Vector3(state.neighbor[1], 0f, state.neighbor[0]) - newPosition;
+                }
+
+                // Iniciar la animación de cada agente
+                activeCoroutines.Add(StartCoroutine(MoveAndRotateAgent(agent, newPosition, direction, duration, state)));
+            }
+        }
+
+        // Esperar a que todas las corutinas terminen
+        foreach (var coroutine in activeCoroutines) {
+            yield return coroutine;
+        }
+    }
+
 
     // Método para agregar un indicador de carga al agente
     private void AddCarryingIndicator(GameObject agent, int agentId) {
