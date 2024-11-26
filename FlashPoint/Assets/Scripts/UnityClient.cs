@@ -20,6 +20,7 @@ public class Edge {
     public int weight;
     public string category;
     public int life;
+    public string status;
 }
 
 [System.Serializable]
