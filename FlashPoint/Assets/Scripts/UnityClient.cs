@@ -107,12 +107,16 @@ public class UnityClient : MonoBehaviour {
         while (currentStep < animationSteps.Count) {
             Debug.Log($"Playing Animation Step {animationSteps[currentStep].step}");
 
-            // Actualizar la casa y los agentes en el paso actual
-            houseBuilder.BuildHouse(animationSteps[currentStep].animationModel);
+            // Actualizar los agentes en el paso actual
             agentManager.UpdateAgentStates(animationSteps[currentStep].animationAgent);
 
-            // Esperar 2 segundos antes de la siguiente actualización
-            yield return new WaitForSeconds(2);
+            // Esperar 3 segundos antes de la siguiente actualización
+            yield return new WaitForSeconds(3);
+
+            // Actualizar la casa en el paso actual
+            houseBuilder.BuildHouse(animationSteps[currentStep].animationModel);
+
+            yield return new WaitForSeconds(1);
 
             // Incrementar el paso actual
             currentStep++;
