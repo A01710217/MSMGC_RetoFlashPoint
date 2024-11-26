@@ -462,6 +462,7 @@ MonoBehaviour:
   - {fileID: 502824098187433007, guid: c76b459a4dcd03146a417e2d60beb1bb, type: 3}
   - {fileID: 5134772225295813871, guid: c0651ca4eaa72964e96a7cfcbe4a077d, type: 3}
   - {fileID: 4929903271740050672, guid: 8773b1a04bf9c15449480c50f57d5661, type: 3}
+  carryingIndicatorPrefab: {fileID: 817187739065239092, guid: 7a53b2cf48d1a1d43b6a6467b742b7ef, type: 3}
 --- !u!4 &1017824459
 Transform:
   m_ObjectHideFlags: 0
