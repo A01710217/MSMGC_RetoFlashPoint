@@ -6,89 +6,106 @@ public class HouseBuilder : MonoBehaviour {
     public GameObject wallPrefab;
     public GameObject wallDoorPrefab;
     public GameObject wallNotDoorPrefab;
-    public GameObject firePrefab; // Opcional: Usa un cubo rojo si no tienes prefab
-    public GameObject poiPrefab;  // Opcional: Usa una esfera azul si no tienes prefab
+    public GameObject firePrefab;
+    public GameObject smokePrefab;
+    public GameObject poi_baitPrefab;
+    public GameObject poiPrefab;
 
+    private Dictionary<Vector3, GameObject> objectsOnMap = new Dictionary<Vector3, GameObject>();
+    private Dictionary<Vector3, GameObject> edgesOnMap = new Dictionary<Vector3, GameObject>();
+
+    // Método para construir o actualizar la casa con los datos del grafo
     public void BuildHouse(MazeGraph graph) {
-        // Colocar nodos (pisos, fuego, puntos de interés)
+        ClearMap();  // Limpiar el mapa antes de construirlo nuevamente
+
         foreach (var node in graph.nodes) {
-            // Posición de la celda
             Vector3 position = new Vector3(node.id[1], 0, node.id[0]);
 
-            // Colocar el piso en cada celda y rotarlo 270 grados en el eje X
-            Instantiate(floorPrefab, position, Quaternion.Euler(270, 0, 0));
+            // Crear el suelo
+            Instantiate(floorPrefab, position, Quaternion.Euler(0, 0, 0));
 
-            // Determinar el tipo de nodo
+            // Crear objetos según el tipo de nodo
             switch (node.type) {
                 case "fire":
-                    // Colocar el fuego
-                    Instantiate(firePrefab ?? CreateDefaultFire(), position + Vector3.up * 0.5f, Quaternion.identity);
+                    var fire = Instantiate(firePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                    objectsOnMap[position] = fire;  // Guardar el objeto en el mapa
+                    break;
+                case "smoke":
+                    var smoke = Instantiate(smokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                    objectsOnMap[position] = smoke;  // Guardar el objeto en el mapa
                     break;
                 case "poi":
-                    // Colocar el punto de interés
-                    Instantiate(poiPrefab ?? CreateDefaultPoi(), position + Vector3.up * 0.5f, Quaternion.identity);
+                    if (node.status == "v") {
+                        var poi = Instantiate(poiPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        objectsOnMap[position] = poi;  // Guardar el objeto en el mapa
+                    } else {
+                        var poiBait = Instantiate(poi_baitPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        objectsOnMap[position] = poiBait;  // Guardar el objeto en el mapa
+                    }
                     break;
                 default:
-                    // Otros tipos no necesitan acción aquí
                     break;
             }
         }
 
-        // Colocar aristas (muros, puertas, salidas)
+        // Colocar las aristas (muros, puertas, salidas)
         foreach (var edge in graph.edges) {
             Vector3 sourcePos = new Vector3(edge.source[1], 0, edge.source[0]);
             Vector3 targetPos = new Vector3(edge.target[1], 0, edge.target[0]);
-
-            // Calcular la posición intermedia para colocar el objeto
             Vector3 midPoint = (sourcePos + targetPos) / 2;
-
-            // Determinar orientación (horizontal o vertical)
             Quaternion rotation = GetEdgeRotation(sourcePos, targetPos);
 
-            // Colocar el objeto según la categoría
+            GameObject edgeObject = null;
+
             switch (edge.category) {
                 case "wall":
-                    Instantiate(wallPrefab, midPoint, rotation);
+                    edgeObject = Instantiate(wallPrefab, midPoint, rotation);
                     break;
                 case "door":
-                    Instantiate(wallDoorPrefab, midPoint, rotation);
+                    // Validar si el estatus de la puerta es abierta o cerrada
+                    if (edge.status == "closed") {
+                        edgeObject = Instantiate(wallDoorPrefab, midPoint, rotation);
+                    }
+                    else if (edge.status == "open") {
+                        edgeObject = Instantiate(wallNotDoorPrefab, midPoint, rotation);
+                    }
                     break;
                 case "exit":
-                    Instantiate(wallNotDoorPrefab, midPoint, rotation);
+                    edgeObject = Instantiate(wallNotDoorPrefab, midPoint, rotation);
                     break;
                 default:
-                    // "empty" o conexiones sin categoría no hacen nada
                     break;
+            }
+
+            if (edgeObject != null) {
+                edgesOnMap[midPoint] = edgeObject;  // Guardar la arista en el diccionario
             }
         }
     }
 
-    // Obtener la rotación de la pared o puerta según su orientación
+    // Función para limpiar el mapa antes de reconstruirlo
+    private void ClearMap() {
+        foreach (var obj in objectsOnMap.Values) {
+            Destroy(obj);  // Eliminar los nodos del mapa
+        }
+        objectsOnMap.Clear();
+
+        foreach (var edge in edgesOnMap.Values) {
+            Destroy(edge);  // Eliminar las aristas del mapa
+        }
+        edgesOnMap.Clear();
+    }
+
+    // Función para determinar la rotación de los objetos (muros, puertas, etc.)
     private Quaternion GetEdgeRotation(Vector3 source, Vector3 target) {
-        // Si la diferencia es en Z, es una conexión vertical
         if (Mathf.Abs(source.z - target.z) > 0.1f) {
-            return Quaternion.Euler(270, 0, 0); // Sin rotación adicional
+            return Quaternion.Euler(0, 0, 0);
         }
 
-        // Si la diferencia es en X, es una conexión horizontal
         if (Mathf.Abs(source.x - target.x) > 0.1f) {
-            return Quaternion.Euler(270, 90, 0); // Rotación 90° en el eje Y
+            return Quaternion.Euler(0, 90, 0);
         }
 
-        // Por defecto, sin rotación
         return Quaternion.identity;
-    }
-
-    // Métodos para crear objetos predeterminados si faltan prefabs
-    private GameObject CreateDefaultFire() {
-        GameObject fire = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        fire.GetComponent<Renderer>().material.color = Color.red;
-        return fire;
-    }
-
-    private GameObject CreateDefaultPoi() {
-        GameObject poi = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        poi.GetComponent<Renderer>().material.color = Color.blue;
-        return poi;
     }
 }
