@@ -73,10 +73,11 @@ public class UnityClient : MonoBehaviour {
     public MetadataUIController metadataUIController;  // Referencia al script MetadataUIController
     private int currentStep = 0;
     private List<AnimationStep> animationSteps;
+    public SceneController sceneController;  // Referencia al script SceneController
+
 
     void Start() {
         StartCoroutine(DownloadCombinedConfig());
-        //StartCoroutine(UpdateMetadataUI());
     }
 
     IEnumerator DownloadCombinedConfig() {
@@ -133,9 +134,16 @@ public class UnityClient : MonoBehaviour {
 
             if (currentStep >= animationSteps.Count) {
                 Debug.Log("Animation completed.");
+                // Validar si se gano
+                if (animationSteps[currentStep - 1].animationModel.metadata.saved_victims >= 6) {
+                    // Cargar la escena de Juego Ganado
+                    sceneController.LoadWinScene();
+                } else {
+                    // Cargar la escena de Juego Perdido
+                    sceneController.LoadGameOverScene();
+                }
                 break;
             }
         }
     }
-
 }
