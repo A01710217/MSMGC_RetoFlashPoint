@@ -933,6 +933,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3821570080462925558, guid: cd89f99207d08f44c85b4202ba0fd103, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -1580535799172915004, guid: 9ed59ed8b9db92c41acc69581e0dc3cd, type: 3}
     - target: {fileID: 4135438161064513878, guid: cd89f99207d08f44c85b4202ba0fd103, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -983,6 +987,8 @@ MonoBehaviour:
   smokePrefab: {fileID: 8090073374582103774, guid: c2a46d6dc6c6e424291f86c0c376d275, type: 3}
   poi_baitPrefab: {fileID: 6866010843795445655, guid: f6da5dbce11792048b774d9fb6e3f66c, type: 3}
   poiPrefab: {fileID: 781987290369368177, guid: f1e8d84bb85af77449b03b51fd454160, type: 3}
+  poiSmokePrefab: {fileID: 7219165993897691404, guid: 93900e2ed1d4cb04e9fa356b45f576dd, type: 3}
+  poi_baitSmokePrefab: {fileID: 8824834120645888692, guid: cb568c95240d91442b7f230583b15799, type: 3}
 --- !u!4 &1148112840
 Transform:
   m_ObjectHideFlags: 0

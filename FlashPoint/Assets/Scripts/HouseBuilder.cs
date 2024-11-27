@@ -10,6 +10,8 @@ public class HouseBuilder : MonoBehaviour {
     public GameObject smokePrefab;
     public GameObject poi_baitPrefab;
     public GameObject poiPrefab;
+    public GameObject poiSmokePrefab;
+    public GameObject poi_baitSmokePrefab;
 
     private Dictionary<Vector3, GameObject> objectsOnMap = new Dictionary<Vector3, GameObject>();
     private Dictionary<Vector3, GameObject> edgesOnMap = new Dictionary<Vector3, GameObject>();
@@ -27,6 +29,10 @@ public class HouseBuilder : MonoBehaviour {
             // Crear objetos según el tipo de nodo
             switch (node.type) {
                 case "fire":
+                    // Validar si hay un poi y eliminarlo si existe
+                    if (objectsOnMap.ContainsKey(position)) {
+                        Destroy(objectsOnMap[position]);
+                    }
                     var fire = Instantiate(firePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     objectsOnMap[position] = fire;  // Guardar el objeto en el mapa
                     break;
@@ -45,14 +51,12 @@ public class HouseBuilder : MonoBehaviour {
                     break;
                 case "poi-smoke":
                     if (node.status == "v") {
-                        var poi = Instantiate(poiPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        var poi = Instantiate(poiSmokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                         objectsOnMap[position] = poi;  // Guardar el objeto en el mapa
                     } else {
-                        var poiBait = Instantiate(poi_baitPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        var poiBait = Instantiate(poi_baitSmokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                         objectsOnMap[position] = poiBait;  // Guardar el objeto en el mapa
                     }
-                    // Agregar humo en la misma posición sin sobrescribir el diccionario
-                    Instantiate(smokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     break;
                 default:
                     break;
@@ -96,6 +100,7 @@ public class HouseBuilder : MonoBehaviour {
 
     // Función para limpiar el mapa antes de reconstruirlo
     private void ClearMap() {
+
         foreach (var obj in objectsOnMap.Values) {
             Destroy(obj);  // Eliminar los nodos del mapa
         }
