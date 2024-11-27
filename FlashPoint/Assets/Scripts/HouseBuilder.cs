@@ -43,6 +43,17 @@ public class HouseBuilder : MonoBehaviour {
                         objectsOnMap[position] = poiBait;  // Guardar el objeto en el mapa
                     }
                     break;
+                case "poi-smoke":
+                    if (node.status == "v") {
+                        var poi = Instantiate(poiPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        objectsOnMap[position] = poi;  // Guardar el objeto en el mapa
+                    } else {
+                        var poiBait = Instantiate(poi_baitPrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                        objectsOnMap[position] = poiBait;  // Guardar el objeto en el mapa
+                    }
+                    // Agregar humo en la misma posición sin sobrescribir el diccionario
+                    Instantiate(smokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
+                    break;
                 default:
                     break;
             }
