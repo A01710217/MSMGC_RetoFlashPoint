@@ -34,9 +34,18 @@ public class AgentState {
 }
 
 [System.Serializable]
+public class Metadata {
+    public int damage_points;
+    public int deaths;
+    public int saved_victims;
+    public int steps;
+}
+
+[System.Serializable]
 public class MazeGraph {
     public List<Node> nodes;
     public List<Edge> edges;
+    public Metadata metadata;
 }
 
 [System.Serializable]
@@ -61,17 +70,19 @@ public class CombinedConfigAnimation {
 public class UnityClient : MonoBehaviour {
     public HouseBuilder houseBuilder;  // Referencia al script HouseBuilder
     public AgentManager agentManager;  // Referencia al script AgentManager
+    public MetadataUIController metadataUIController;  // Referencia al script MetadataUIController
     private int currentStep = 0;
     private List<AnimationStep> animationSteps;
 
     void Start() {
         StartCoroutine(DownloadCombinedConfig());
+        //StartCoroutine(UpdateMetadataUI());
     }
 
     IEnumerator DownloadCombinedConfig() {
         // Realizar solicitud POST al servidor para obtener el JSON combinado
         UnityWebRequest request = UnityWebRequest.PostWwwForm("http://localhost:8585", "");
-        yield return request.SendWebRequest();
+        yield return request.SendWebRequest(); // Esperar a que se complete la solicitud
 
         if (request.result == UnityWebRequest.Result.Success) {
             Debug.Log("Response: " + request.downloadHandler.text);
@@ -94,14 +105,16 @@ public class UnityClient : MonoBehaviour {
                 // Guardar los pasos de animación
                 animationSteps = combinedData.animationData;
                 StartCoroutine(PlayAnimationSteps());
-
             } catch (Exception e) {
                 Debug.LogError("Error al deserializar el JSON: " + e.Message);
+                yield break; // Finalizar la corutina en caso de error
             }
         } else {
             Debug.Log("Error: " + request.error);
+            yield break; // Finalizar la corutina en caso de error en la solicitud
         }
     }
+
 
      // Corutina para ejecutar los pasos de animación
     IEnumerator PlayAnimationSteps() {
@@ -113,6 +126,8 @@ public class UnityClient : MonoBehaviour {
             // Esperar a que los agentes terminen de moverse
             yield return StartCoroutine(agentManager.UpdateAgentStatesAndWait(animationSteps[currentStep].animationAgent, 0.5f));
 
+            // Actualizar la UI con los metadatos
+            metadataUIController.UpdateMetadata(animationSteps[currentStep].animationModel.metadata);
             // Incrementar el paso actual
             currentStep++;
 
