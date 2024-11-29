@@ -10,8 +10,11 @@ public class HouseBuilder : MonoBehaviour {
     public GameObject smokePrefab;
     public GameObject poi_baitPrefab;
     public GameObject poiPrefab;
+<<<<<<< HEAD
     public GameObject poiSmokePrefab;
     public GameObject poi_baitSmokePrefab;
+=======
+>>>>>>> e854601bc8094a9ac0162741347e31214c553b33
 
     private Dictionary<Vector3, GameObject> objectsOnMap = new Dictionary<Vector3, GameObject>();
     private Dictionary<Vector3, GameObject> edgesOnMap = new Dictionary<Vector3, GameObject>();
@@ -29,10 +32,13 @@ public class HouseBuilder : MonoBehaviour {
             // Crear objetos según el tipo de nodo
             switch (node.type) {
                 case "fire":
+<<<<<<< HEAD
                     // Validar si hay un poi y eliminarlo si existe
                     if (objectsOnMap.ContainsKey(position)) {
                         Destroy(objectsOnMap[position]);
                     }
+=======
+>>>>>>> e854601bc8094a9ac0162741347e31214c553b33
                     var fire = Instantiate(firePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
                     objectsOnMap[position] = fire;  // Guardar el objeto en el mapa
                     break;
@@ -49,6 +55,7 @@ public class HouseBuilder : MonoBehaviour {
                         objectsOnMap[position] = poiBait;  // Guardar el objeto en el mapa
                     }
                     break;
+<<<<<<< HEAD
                 case "poi-smoke":
                     if (node.status == "v") {
                         var poi = Instantiate(poiSmokePrefab, position + Vector3.up * 0.1f, Quaternion.identity);
@@ -58,6 +65,8 @@ public class HouseBuilder : MonoBehaviour {
                         objectsOnMap[position] = poiBait;  // Guardar el objeto en el mapa
                     }
                     break;
+=======
+>>>>>>> e854601bc8094a9ac0162741347e31214c553b33
                 default:
                     break;
             }
@@ -100,7 +109,10 @@ public class HouseBuilder : MonoBehaviour {
 
     // Función para limpiar el mapa antes de reconstruirlo
     private void ClearMap() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> e854601bc8094a9ac0162741347e31214c553b33
         foreach (var obj in objectsOnMap.Values) {
             Destroy(obj);  // Eliminar los nodos del mapa
         }
